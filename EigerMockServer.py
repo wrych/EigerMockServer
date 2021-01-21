@@ -1,37 +1,45 @@
-class ChildValidationException(Exception)
-
-class EigerComponent:
-    def __init__(self, name):
-        self._name = name
-        self._children = list()
-
-    def _validate_child(self, child):
-        pass
-
-    def add_child(self, child):
-        self._validate_child(child)
-        self._children.append(child)
-
-
-class EigerModule(EigerComponent):
-    def __init__(self, *args, **kw_args):
-        super(self, EigerModule).__init__(*args, **kw_args)
-
-
-class EigerTask(EigerComponent):
-    def __init__(self, *args, **kw_args):
-        super(self, EigerTask).__init__(*args, **kw_args)
+from EigerMockServerStructure import (
+    EigerComponent,
+    EigerCommand,
+    EigerModule,
+    EigerTask,
+)
 
 
 class EigerMockServer(EigerComponent):
     def __init__(self):
-        pass
+        super(EigerMockServer, self).__init__("EigerMockServer")
 
-class Einer
+
+class EigerDetector(EigerModule):
+    def __init__(self):
+        super(EigerDetector, self).__init__("detector")
+
+
+class EigerDetectorCommand(EigerTask):
+    def __init__(self):
+        super(EigerDetectorCommand, self).__init__("command")
+
+
+class EigerDetectorCommandInitialize(EigerComponent, EigerCommand):
+    def __init__(self):
+        super(EigerDetectorCommandInitialize, self).__init__("initialize")
+
+
+def init_detector():
+    eiger_mock_server = EigerMockServer()
+
+    eiger_detector = EigerDetector()
+    eiger_mock_server.add_child(eiger_detector)
+
+    eiger_detector_command = EigerDetectorCommand()
+    eiger_detector.add_child(eiger_detector_command)
+
+    eiger_detector_command_initialize = EigerDetectorCommandInitialize()
+    eiger_detector_command.add_child(eiger_detector_command_initialize)
+
+    return eiger_mock_server
 
 
 if __name__ == "__main__":
-    detector_command = EigerTask("command")
-    detector = EigerModule("detector")
-    detector.add_child(detector_command)
-    EigerMockServer()
+    init_detector()

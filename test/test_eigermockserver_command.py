@@ -4,5 +4,5 @@ import EigerMockServer
 
 
 def test_initialize():
-    server = EigerMockServer.EigerMockServer()
+    server = EigerMockServer.init_detector()
     cmd = server.detector.command.initialize()
